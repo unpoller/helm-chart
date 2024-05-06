@@ -54,7 +54,7 @@ spec:
       volumes:
         - name: config-volume
           secret:
-            secretName: unifi-poller
+            secretName: {{ include "unpoller.fullname" . }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
