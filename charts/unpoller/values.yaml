@@ -7,7 +7,7 @@ image:
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   # this is set to the major version compatible, if you want to pin this, you must override it
-  tag: "v2"
+  tag: ""
 
 imagePullSecrets: []
 nameOverride: ""
