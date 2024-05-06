@@ -31,8 +31,9 @@ jobs:
       - name: Update helm values
         run: |
           UNPOLLER_VERSION=${{ github.event.inputs.unpoller_version }}
+          CHART_VERSION="${UNPOLLER_VERSION:1}"
           yq -i ".appVersion=\"${UNPOLLER_VERSION}\"" charts/unpoller/Chart.yaml
-          yq -i ".version=\"${UNPOLLER_VERSION}\"" charts/unpoller/Chart.yaml
+          yq -i ".version=\"${CHART_VERSION}\"" charts/unpoller/Chart.yaml
           make helm-docs
           
           cp charts/unpoller/README.md README.MD

@@ -11,7 +11,7 @@ Optionally, it can deploy automatically the dashboards into a Grafana instance t
 * Creates a Dashboard instance for all the unpoller provided charts.
 See Readme.MD for details, and values.yaml for all the configuration options.
 
-See further documentation in how to install unpoller in Kubernetes in https://unpoller.com/PATH_TBD (will be updated)
+See further documentation in how to install unpoller in Kubernetes in http://unpoller.github.io/helm-chart (will be updated)
 
 **Homepage:** <https://unpoller.com/>
 
