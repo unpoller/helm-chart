@@ -33,7 +33,7 @@ jobs:
           UNPOLLER_VERSION=${{ workflow.inputs.unpoller_version }}
           yq -i ".appVersion=\"${UNPOLLER_VERSION}\"" charts/unpoller/Chart.yaml
           yq -i ".version=\"${UNPOLLER_VERSION}\"" charts/unpoller/Chart.yaml
-           yq -i ".image.tag=\"${UNPOLLER_VERSION}\"" charts/unpoller/values.yaml
+          yq -i ".image.tag=\"${UNPOLLER_VERSION}\"" charts/unpoller/values.yaml
           make helm-docs
           
           charts/unpoller/README.md README.MD
