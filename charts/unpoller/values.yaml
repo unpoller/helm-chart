@@ -6,7 +6,8 @@ image:
   repository:  "ghcr.io/unpoller/unpoller"
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "v2.11.2"
+  # this is set to the major version compatible, if you want to pin this, you must override it
+  tag: "v2"
 
 imagePullSecrets: []
 nameOverride: ""

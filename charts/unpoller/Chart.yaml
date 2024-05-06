@@ -12,8 +12,8 @@ description: |
   
   See further documentation in how to install unpoller in Kubernetes in https://unpoller.com/PATH_TBD (will be updated)
 type: application
-version: "2.11.2"
-appVersion: "v2.11.2"
+version: "1.0.0"
+appVersion: "v2"
 keywords:
   - unifi
   - unpoller
