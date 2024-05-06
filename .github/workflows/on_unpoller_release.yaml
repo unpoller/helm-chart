@@ -1,5 +1,4 @@
-name: On Unpoller release
-
+name: OnUnpollerRelease
 on:
   workflow_dispatch:
     inputs:
