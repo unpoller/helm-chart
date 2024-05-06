@@ -36,7 +36,7 @@ jobs:
           yq -i ".image.tag=\"${UNPOLLER_VERSION}\"" charts/unpoller/values.yaml
           make helm-docs
           
-          charts/unpoller/README.md README.MD
+          cp charts/unpoller/README.md README.MD
           git add charts
           git add README.MD         
           git commit -m "chore(unpoller): Updated chart and app version to ${UNPOLLER_VERSION}}"
