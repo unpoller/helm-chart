@@ -30,7 +30,7 @@ jobs:
 
       - name: Update helm values
         run: |
-          UNPOLLER_VERSION=${{ workflow.inputs.unpoller_version }}
+          UNPOLLER_VERSION=${{ github.event.inputs.unpoller_version }}
           yq -i ".appVersion=\"${UNPOLLER_VERSION}\"" charts/unpoller/Chart.yaml
           yq -i ".version=\"${UNPOLLER_VERSION}\"" charts/unpoller/Chart.yaml
           yq -i ".image.tag=\"${UNPOLLER_VERSION}\"" charts/unpoller/values.yaml
