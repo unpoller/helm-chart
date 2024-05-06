@@ -26,6 +26,9 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
+      - name: yq - portable yaml processor
+        uses: mikefarah/yq@v4.43.1
+
       - name: Update helm values
         run: |
           UNPOLLER_VERSION=${{ workflow.inputs.unpoller_version }}
