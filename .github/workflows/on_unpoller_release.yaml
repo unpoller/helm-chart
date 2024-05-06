@@ -1,0 +1,41 @@
+name: On Unpoller release
+
+on:
+  workflow_dispatch:
+    inputs:
+      unpoller_version:
+        description: 'Version of unpoller released'
+        required: true
+        type: string
+
+jobs:
+  release:
+    # depending on default permission settings for your org (contents being read-only or read-write for workloads), you will have to add permissions
+    # see: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#modifying-the-permissions-for-the-github_token
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+      - name: Update helm values
+        run: |
+          UNPOLLER_VERSION=${{ workflow.inputs.unpoller_version }}
+          yq -i ".appVersion=\"${UNPOLLER_VERSION}\"" charts/unpoller/Chart.yaml
+          yq -i ".version=\"${UNPOLLER_VERSION}\"" charts/unpoller/Chart.yaml
+           yq -i ".image.tag=\"${UNPOLLER_VERSION}\"" charts/unpoller/values.yaml
+          make helm-docs
+          
+          charts/unpoller/README.md README.MD
+          git add charts
+          git add README.MD         
+          git commit -m "chore(unpoller): Updated chart and app version to ${UNPOLLER_VERSION}}"
+          git push
