@@ -9,9 +9,9 @@ spec:
   external:
     url: http://monitoring-promstack-grafana #Grafana URL
     adminPassword:
-      name: grafana-admin-credentials
+      name: {{ include "unpoller.grafana-secret" . }}
       key: GF_SECURITY_ADMIN_PASSWORD
     adminUser:
-      name: grafana-admin-credentials
+      name: {{ include "unpoller.grafana-secret" . }}
       key: GF_SECURITY_ADMIN_USER
 {{- end }}
