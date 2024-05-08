@@ -14,7 +14,7 @@ description: |
   **Note**: *This is a best effort to keep this chart working for kubernetes.*
 
 type: application
-version: "2.11.2-Chart3"
+version: "2.11.2-Chart4"
 appVersion: "2.11.2"
 keywords:
   - unifi
