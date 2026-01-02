@@ -85,4 +85,32 @@ entries:
     urls:
     - https://github.com/unpoller/helm-chart/releases/download/2.11.2-Chart4/unpoller-2.11.2-Chart4.tgz
     version: 2.11.2-Chart4
-generated: "2024-05-09T10:06:45.862247225Z"
+  - apiVersion: v2
+    appVersion: v2.21.0
+    created: "2026-01-02T22:46:22.94162279Z"
+    description: 'A Helm chart for unpoller, a unifi prometheus exporter. This chart
+      helps deploy Unpoller (unifi metrics exporter) in kubernetes clusters.  It crates
+      a Deployment to run the unpoller container, confiuration is stored in a ConfigMap
+      and mounted in the container. It supports integration with Prometheus operator,
+      so a PodMonitor is created that will scrape the Deployment for the metrics.
+      Optionally, it can deploy automatically the dashboards into a Grafana instance
+      through the integration with GrafanaOperator: * Creates a Grafana CR with the
+      credentials provided (or reuses existing Grafana object) * Creates a Dashboard
+      instance for all the unpoller provided charts.  See further documentation in
+      how to install unpoller in Kubernetes in http://unpoller.github.io/helm-chart   **Note**:
+      *This is a best effort to keep this chart working for kubernetes.* '
+    digest: 94fb6a5341b499b52d9e66cd0638ac52d68742dc1bd94aa7b6520099ccb19bd3
+    home: https://unpoller.com/
+    keywords:
+    - unifi
+    - unpoller
+    - monitoring
+    - prometheus
+    name: unpoller
+    sources:
+    - https://github.com/unpoller/helm-chart
+    type: application
+    urls:
+    - https://github.com/unpoller/helm-chart/releases/download/2.1.0/unpoller-2.1.0.tgz
+    version: 2.1.0
+generated: "2026-01-02T22:46:22.941643639Z"
