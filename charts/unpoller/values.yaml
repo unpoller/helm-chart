@@ -38,7 +38,9 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
-
+extraEnv: []
+  # - name: UP_POLLER_QUIET
+  #   value: false
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -83,7 +85,7 @@ podMonitor:
   # Whether to create a PodMonitor resource for Prometheus Operator
   enabled: true
 
-# section to configure he unpoller dashboards, relaying on the CRDs from grafana operator. https://github.com/grafana/grafana-operator
+# section to configure the unpoller dashboards, relaying on the CRDs from grafana operator. https://github.com/grafana/grafana-operator
 dashboards:
   create: true
   # Configures the Grafana instance (grafana.integreatly.org/v1beta1)
@@ -106,30 +108,42 @@ dashboards:
       # Password for username, will create field GF_SECURITY_ADMIN_PASSWORD
       password: "prom-operator"
 
-# Configuration file to be loaded by unpoller, See Github example page for more details.
-# https://github.com/unpoller/unpoller/blob/master/examples/up.conf.example
-upConfig: |
-  [poller]
-      debug = false
-      quiet = false
-      plugins = []
-  [prometheus]
-    disable = false
-    http_listen = "0.0.0.0:9130"
-    report_errors = false
-  [influxdb]
-    disable = true
-  [unifi]
-      dynamic = false
-  [loki]
-      disable = true
-  [[unifi.controller]]    
-      url         = "https://unifi.home:8443"
-      user        = "unifi"
-      pass        = "unifi"
-      sites       = ["all"]
-      save_ids    = true
-      save_dpi    = true
-      save_sites  = true
-      hash_pii    = false
-      verify_ssl  = false
+# debug controls whether unpoller debug mode is enabled
+debug: false
+
+# defaultCredentialsExistingSecret is used to inject a default username and password from an
+# existing Kubernetes secret
+defaultCredentialsExistingSecret:
+  enabled: false
+  name: ""
+  userKey: "user"
+  passwordKey: "password"
+
+# config is used to construct the unpoller application config
+# see https://unpoller.com/docs/install/configuration for configuration options
+config:
+  poller:
+    debug: false
+    quiet: false
+    plugins: []
+  prometheus:
+    disable: false
+    http_listen: "0.0.0.0:9130"
+    report_errors: false
+  influxdb:
+    disable: true
+  unifi:
+    dynamic: false
+    defaults:
+      url: "https://unifi.home:8443"
+      user: "unifi"
+      pass: "unifi"
+      sites:
+        - "all"
+      save_ids: true
+      save_dpi: true
+      save_sites: true
+      hash_pii: false
+      verify_ssl: false
+  loki:
+    disable: true
