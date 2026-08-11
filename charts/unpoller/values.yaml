@@ -67,6 +67,8 @@ tolerations: []
 
 affinity: {}
 
+priorityClassName:
+
 # Service configuration
 service:
   # Whether to create a Service resource
