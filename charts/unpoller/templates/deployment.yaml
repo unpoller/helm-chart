@@ -34,6 +34,27 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - "--config"
+            - "/etc/unpoller/up.yaml"
+          env:
+            - name: UP_POLLER_DEBUG
+              value: {{ .Values.debug | quote }}
+            {{- if .Values.defaultCredentialsExistingSecret.enabled }}
+            - name: UP_UNIFI_DEFAULT_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.defaultCredentialsExistingSecret.name }}
+                  key: {{ .Values.defaultCredentialsExistingSecret.userKey }}
+            - name: UP_UNIFI_DEFAULT_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.defaultCredentialsExistingSecret.name }}
+                  key: {{ .Values.defaultCredentialsExistingSecret.passwordKey }}
+            {{- end }}
+            {{- with .Values.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
           ports:
             - containerPort: 9130
               name: tcp
@@ -49,8 +70,8 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
             - name: config-volume
-              mountPath: /etc/unpoller/up.conf
-              subPath: up.conf
+              mountPath: /etc/unpoller/up.yaml
+              subPath: up.yaml
       volumes:
         - name: config-volume
           secret:

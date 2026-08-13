@@ -1,6 +1,6 @@
 # unpoller
 
-![Version: 2.1.0](https://img.shields.io/badge/Version-2.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.21.0](https://img.shields.io/badge/AppVersion-v2.21.0-informational?style=flat-square)
+![Version: 3.0.0](https://img.shields.io/badge/Version-3.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.21.0](https://img.shields.io/badge/AppVersion-v2.21.0-informational?style=flat-square)
 
 A Helm chart for unpoller, a unifi prometheus exporter. This chart helps deploy Unpoller (unifi metrics exporter)
 in kubernetes clusters.
@@ -25,6 +25,24 @@ See further documentation in how to install unpoller in Kubernetes in http://unp
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
+| config.influxdb.disable | bool | `true` |  |
+| config.loki.disable | bool | `true` |  |
+| config.poller.debug | bool | `false` |  |
+| config.poller.plugins | list | `[]` |  |
+| config.poller.quiet | bool | `false` |  |
+| config.prometheus.disable | bool | `false` |  |
+| config.prometheus.http_listen | string | `"0.0.0.0:9130"` |  |
+| config.prometheus.report_errors | bool | `false` |  |
+| config.unifi.defaults.hash_pii | bool | `false` |  |
+| config.unifi.defaults.pass | string | `"unifi"` |  |
+| config.unifi.defaults.save_dpi | bool | `true` |  |
+| config.unifi.defaults.save_ids | bool | `true` |  |
+| config.unifi.defaults.save_sites | bool | `true` |  |
+| config.unifi.defaults.sites[0] | string | `"all"` |  |
+| config.unifi.defaults.url | string | `"https://unifi.home:8443"` |  |
+| config.unifi.defaults.user | string | `"unifi"` |  |
+| config.unifi.defaults.verify_ssl | bool | `false` |  |
+| config.unifi.dynamic | bool | `false` |  |
 | dashboards.create | bool | `true` |  |
 | dashboards.grafana.create | bool | `true` |  |
 | dashboards.grafana.secret.existingSecretName | string | `""` |  |
@@ -32,6 +50,12 @@ See further documentation in how to install unpoller in Kubernetes in http://unp
 | dashboards.grafana.secret.username | string | `"admin"` |  |
 | dashboards.grafana.selectorLabels | object | `{}` |  |
 | dashboards.grafana.url | string | `""` |  |
+| debug | bool | `false` |  |
+| defaultCredentialsExistingSecret.enabled | bool | `false` |  |
+| defaultCredentialsExistingSecret.name | string | `""` |  |
+| defaultCredentialsExistingSecret.passwordKey | string | `"password"` |  |
+| defaultCredentialsExistingSecret.userKey | string | `"user"` |  |
+| extraEnv | list | `[]` |  |
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"ghcr.io/unpoller/unpoller"` |  |
@@ -59,5 +83,4 @@ See further documentation in how to install unpoller in Kubernetes in http://unp
 | serviceAccount.create | bool | `true` |  |
 | serviceAccount.name | string | `""` |  |
 | tolerations | list | `[]` |  |
-| upConfig | string | `"[poller]\n    debug = false\n    quiet = false\n    plugins = []\n[prometheus]\n  disable = false\n  http_listen = \"0.0.0.0:9130\"\n  report_errors = false\n[influxdb]\n  disable = true\n[unifi]\n    dynamic = false\n[loki]\n    disable = true\n[[unifi.controller]]    \n    url         = \"https://unifi.home:8443\"\n    user        = \"unifi\"\n    pass        = \"unifi\"\n    sites       = [\"all\"]\n    save_ids    = true\n    save_dpi    = true\n    save_sites  = true\n    hash_pii    = false\n    verify_ssl  = false\n"` |  |
 
