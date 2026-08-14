@@ -54,7 +54,14 @@ spec:
       volumes:
         - name: config-volume
           secret:
+            {{- if .Values.upConfigExistingSecret.name }}
+            secretName: {{ .Values.upConfigExistingSecret.name }}
+            items:
+              - key: {{ .Values.upConfigExistingSecret.key }}
+                path: up.conf
+            {{- else }}
             secretName: {{ include "unpoller.fullname" . }}
+            {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
