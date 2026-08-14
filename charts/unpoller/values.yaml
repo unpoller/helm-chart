@@ -2,6 +2,10 @@
 
 replicaCount: 1
 
+extraEnv: []
+# - name: ENABLE_SERVER_STORAGE
+#   value: "false"
+
 image:
   repository:  "ghcr.io/unpoller/unpoller"
   pullPolicy: IfNotPresent
@@ -130,7 +134,7 @@ upConfig: |
       dynamic = false
   [loki]
       disable = true
-  [[unifi.controller]]    
+  [[unifi.controller]]
       url         = "https://unifi.home:8443"
       user        = "unifi"
       pass        = "unifi"
