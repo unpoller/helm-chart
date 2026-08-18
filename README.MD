@@ -1,6 +1,6 @@
 # unpoller
 
-![Version: 2.1.0](https://img.shields.io/badge/Version-2.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.21.0](https://img.shields.io/badge/AppVersion-v2.21.0-informational?style=flat-square)
+![Version: 2.3.0](https://img.shields.io/badge/Version-2.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.4.1](https://img.shields.io/badge/AppVersion-v3.4.1-informational?style=flat-square)
 
 A Helm chart for unpoller, a unifi prometheus exporter. This chart helps deploy Unpoller (unifi metrics exporter)
 in kubernetes clusters.
@@ -32,6 +32,7 @@ See further documentation in how to install unpoller in Kubernetes in http://unp
 | dashboards.grafana.secret.username | string | `"admin"` |  |
 | dashboards.grafana.selectorLabels | object | `{}` |  |
 | dashboards.grafana.url | string | `""` |  |
+| extraEnv | list | `[]` |  |
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"ghcr.io/unpoller/unpoller"` |  |
@@ -43,16 +44,24 @@ See further documentation in how to install unpoller in Kubernetes in http://unp
 | nodeSelector | object | `{}` |  |
 | podAnnotations | object | `{}` |  |
 | podLabels | object | `{}` |  |
+| podMonitor.enabled | bool | `true` |  |
 | podSecurityContext | object | `{}` |  |
+| priorityClassName | string | `nil` |  |
 | readinessProbe.httpGet.path | string | `"/"` |  |
 | readinessProbe.httpGet.port | string | `"tcp"` |  |
 | replicaCount | int | `1` |  |
 | resources | object | `{}` |  |
 | securityContext | object | `{}` |  |
+| service.annotations | object | `{}` |  |
+| service.enabled | bool | `false` |  |
+| service.port | int | `9130` |  |
+| service.type | string | `"ClusterIP"` |  |
 | serviceAccount.annotations | object | `{}` |  |
 | serviceAccount.automount | bool | `true` |  |
 | serviceAccount.create | bool | `true` |  |
 | serviceAccount.name | string | `""` |  |
 | tolerations | list | `[]` |  |
-| upConfig | string | `"[poller]\n    debug = false\n    quiet = false\n    plugins = []\n[prometheus]\n  disable = false\n  http_listen = \"0.0.0.0:9130\"\n  report_errors = false\n[influxdb]\n  disable = true\n[unifi]\n    dynamic = false\n[loki]\n    disable = true\n[[unifi.controller]]    \n    url         = \"https://unifi.home:8443\"\n    user        = \"unifi\"\n    pass        = \"unifi\"\n    sites       = [\"all\"]\n    save_ids    = true\n    save_dpi    = true\n    save_sites  = true\n    hash_pii    = false\n    verify_ssl  = false\n"` |  |
+| upConfig | string | `"[poller]\n    debug = false\n    quiet = false\n    plugins = []\n[prometheus]\n  disable = false\n  http_listen = \"0.0.0.0:9130\"\n  report_errors = false\n[influxdb]\n  disable = true\n[unifi]\n    dynamic = false\n[loki]\n    disable = true\n[[unifi.controller]]\n    url         = \"https://unifi.home:8443\"\n    user        = \"unifi\"\n    pass        = \"unifi\"\n    sites       = [\"all\"]\n    save_ids    = true\n    save_dpi    = true\n    save_sites  = true\n    hash_pii    = false\n    verify_ssl  = false\n"` |  |
+| upConfigExistingSecret.key | string | `"up.conf"` |  |
+| upConfigExistingSecret.name | string | `""` |  |
 
