@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
 
@@ -28,7 +28,7 @@ jobs:
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
       - name: yq - portable yaml processor
-        uses: mikefarah/yq@v4.43.1
+        uses: mikefarah/yq@v4.53.3
 
       - name: Update helm values
         run: |
@@ -62,7 +62,7 @@ jobs:
           git push
 
       - name: Install Helm
-        uses: azure/setup-helm@v4
+        uses: azure/setup-helm@v5.0.1
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
@@ -70,7 +70,7 @@ jobs:
         run: helm lint charts/unpoller
 
       - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4.6.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -95,7 +95,7 @@ jobs:
           echo "digest=$digest" >> "$GITHUB_OUTPUT"
 
       - name: Install Cosign
-        uses: sigstore/cosign-installer@v3
+        uses: sigstore/cosign-installer@v4.1.2
 
       - name: Sign Helm chart
         run: cosign sign --yes ghcr.io/unpoller/helm-chart/unpoller@${{ steps.push.outputs.digest }}
