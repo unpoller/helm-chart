@@ -12,6 +12,8 @@ Optionally, it can deploy automatically the dashboards into a Grafana instance t
 
 See further documentation in how to install unpoller in Kubernetes in http://unpoller.github.io/helm-chart
 
+Install via OCI: `helm install unpoller oci://ghcr.io/unpoller/helm-chart/unpoller`
+
 **Note**: *This is a best effort to keep this chart working for kubernetes.*
 
 **Homepage:** <https://unpoller.com/>
