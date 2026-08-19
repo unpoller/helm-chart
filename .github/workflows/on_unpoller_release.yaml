@@ -14,6 +14,7 @@ jobs:
     permissions:
       contents: write
       packages: write
+      id-token: write # for cosign keyless signing
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -65,9 +66,36 @@ jobs:
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
-      - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.6.0
-        env:
-          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Lint Helm chart
+        run: helm lint charts/unpoller
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
         with:
-          config: .github/cr.yaml
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Log in to Helm registry
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io --username "${{ github.actor }}" --password-stdin
+
+      - name: Package Helm chart
+        run: |
+          mkdir -p .helm
+          helm package charts/unpoller --destination .helm
+
+      - name: Push Helm chart as OCI artifact
+        id: push
+        run: |
+          output=$(helm push .helm/unpoller-*.tgz oci://ghcr.io/unpoller/helm-chart)
+          echo "$output"
+          digest=$(echo "$output" | sed -n 's/^Digest: //p')
+          test -n "$digest"
+          echo "digest=$digest" >> "$GITHUB_OUTPUT"
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3
+
+      - name: Sign Helm chart
+        run: cosign sign --yes ghcr.io/unpoller/helm-chart/unpoller@${{ steps.push.outputs.digest }}
