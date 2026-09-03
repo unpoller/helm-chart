@@ -1,6 +1,6 @@
 # unpoller
 
-![Version: 2.6.0](https://img.shields.io/badge/Version-2.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v5.3.0](https://img.shields.io/badge/AppVersion-v5.3.0-informational?style=flat-square)
+![Version: 2.7.0](https://img.shields.io/badge/Version-2.7.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v5.2.2](https://img.shields.io/badge/AppVersion-v5.2.2-informational?style=flat-square)
 
 A Helm chart for unpoller, a unifi prometheus exporter. This chart helps deploy Unpoller (unifi metrics exporter)
 in kubernetes clusters.
