@@ -15,22 +15,22 @@ jobs:
     name: chart
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@v7.0.1
 
-      - uses: azure/setup-helm@2f5e7bc67f1f9972ab16657bb795f36d8f04de0e # v5.1.0
+      - uses: azure/setup-helm@v5.0.1
         with:
           version: v3.22.1
 
-      # The release workflow calls this action, then yq. Run a real query here so an action bump is exercised.
+      # Same yq revision as the release workflow. The query has to succeed, so an action bump copied here is exercised.
       - name: Read the chart version
         id: chart-version
-        uses: mikefarah/yq@f2944b823f84906a127dbd29e4c2a3e60c4e550e # v4.54.3
+        uses: mikefarah/yq@v4.53.3
         with:
           cmd: yq -e '.version + " " + .appVersion' charts/unpoller/Chart.yaml
 
-      # The release workflow installs cosign before signing. Installing it here fails the build if the action breaks.
+      # Same cosign-installer revision as the release workflow.
       - name: Install cosign
-        uses: sigstore/cosign-installer@756fe2d284c7292c4e9b62c8a28f1e5629c59532 # v4.1.3
+        uses: sigstore/cosign-installer@v4.1.2
 
       - name: Show tool versions
         run: |
