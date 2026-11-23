@@ -95,7 +95,7 @@ jobs:
           echo "digest=$digest" >> "$GITHUB_OUTPUT"
 
       - name: Install Cosign
-        uses: sigstore/cosign-installer@v4.1.2
+        uses: sigstore/cosign-installer@v4.1.3
 
       - name: Sign Helm chart
         run: cosign sign --yes ghcr.io/unpoller/helm-chart/unpoller@${{ steps.push.outputs.digest }}
