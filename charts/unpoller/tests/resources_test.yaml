@@ -1,0 +1,104 @@
+suite: optional resources
+release:
+  name: unpoller
+tests:
+  - it: creates the up.conf secret by default
+    templates:
+      - unpoller-config-secret.yaml
+    asserts:
+      - isKind:
+          of: Secret
+      - equal:
+          path: metadata.name
+          value: unpoller
+      - matchRegex:
+          path: stringData["up.conf"]
+          pattern: \[unifi\.controller\]
+  - it: skips the up.conf secret when an existing secret is named
+    templates:
+      - unpoller-config-secret.yaml
+    set:
+      upConfigExistingSecret.name: existing-up
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: skips the service until it is enabled
+    templates:
+      - service.yaml
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: renders a metrics service
+    templates:
+      - service.yaml
+    set:
+      service.enabled: true
+    asserts:
+      - isKind:
+          of: Service
+      - equal:
+          path: spec.ports[0].port
+          value: 9130
+      - equal:
+          path: spec.ports[0].targetPort
+          value: tcp
+  - it: renders a pod monitor by default
+    templates:
+      - pod-monitor.yaml
+    asserts:
+      - isKind:
+          of: PodMonitor
+      - equal:
+          path: spec.podMetricsEndpoints[0].port
+          value: tcp
+  - it: skips the pod monitor when disabled
+    templates:
+      - pod-monitor.yaml
+    set:
+      podMonitor.enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: renders the grafana instance and its secret
+    templates:
+      - grafana.yaml
+      - grafana-secret.yaml
+    asserts:
+      - hasDocuments:
+          count: 1
+      - documentSelector:
+          path: kind
+          value: Grafana
+        isKind:
+          of: Grafana
+      - documentSelector:
+          path: kind
+          value: Secret
+        equal:
+          path: stringData.GF_SECURITY_ADMIN_USER
+          value: admin
+  - it: skips grafana resources when the instance is not created
+    templates:
+      - grafana.yaml
+      - grafana-secret.yaml
+    set:
+      dashboards.grafana.create: false
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: renders the five grafana dashboards
+    templates:
+      - dashboards.yaml
+    asserts:
+      - hasDocuments:
+          count: 5
+      - isKind:
+          of: GrafanaDashboard
+  - it: skips dashboards when disabled
+    templates:
+      - dashboards.yaml
+    set:
+      dashboards.create: false
+    asserts:
+      - hasDocuments:
+          count: 0
