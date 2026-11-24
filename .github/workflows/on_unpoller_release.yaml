@@ -28,7 +28,7 @@ jobs:
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
       - name: yq - portable yaml processor
-        uses: mikefarah/yq@v4.53.3
+        uses: mikefarah/yq@v4.54.3
 
       - name: Update helm values
         run: |
