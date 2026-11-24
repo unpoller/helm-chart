@@ -1,0 +1,58 @@
+suite: deployment
+release:
+  name: unpoller
+templates:
+  - deployment.yaml
+tests:
+  - it: renders a deployment that uses the chart app version
+    chart:
+      appVersion: 9.9.9-test
+    asserts:
+      - isKind:
+          of: Deployment
+      - equal:
+          path: metadata.name
+          value: unpoller
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: ghcr.io/unpoller/unpoller:9.9.9-test
+      - equal:
+          path: spec.template.spec.volumes[0].secret.secretName
+          value: unpoller
+      - notExists:
+          path: spec.template.spec.priorityClassName
+  - it: honors an image tag and an existing up.conf secret
+    chart:
+      appVersion: 1.2.3-ignored
+    set:
+      image.tag: pinned-tag
+      upConfigExistingSecret.name: existing-up
+      upConfigExistingSecret.key: up.conf
+      priorityClassName: system-cluster-critical
+      extraEnv:
+        - name: ENABLE_SERVER_STORAGE
+          value: "false"
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: ghcr.io/unpoller/unpoller:pinned-tag
+      - equal:
+          path: spec.template.spec.volumes[0].secret.secretName
+          value: existing-up
+      - equal:
+          path: spec.template.spec.volumes[0].secret.items[0].key
+          value: up.conf
+      - equal:
+          path: spec.template.spec.priorityClassName
+          value: system-cluster-critical
+      - equal:
+          path: spec.template.spec.containers[0].env[0].name
+          value: ENABLE_SERVER_STORAGE
+  - it: uses the named service account when one is not created
+    set:
+      serviceAccount.create: false
+      serviceAccount.name: shared-sa
+    asserts:
+      - equal:
+          path: spec.template.spec.serviceAccountName
+          value: shared-sa
