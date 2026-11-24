@@ -1,0 +1,81 @@
+name: CI
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  chart:
+    name: chart
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: azure/setup-helm@2f5e7bc67f1f9972ab16657bb795f36d8f04de0e # v5.1.0
+        with:
+          version: v3.22.1
+
+      - name: Read the chart version
+        id: chart-version
+        uses: mikefarah/yq@f2944b823f84906a127dbd29e4c2a3e60c4e550e # v4.54.3
+        with:
+          cmd: yq -e '.version + " " + .appVersion' charts/unpoller/Chart.yaml
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@756fe2d284c7292c4e9b62c8a28f1e5629c59532 # v4.1.3
+
+      - name: Show tool versions
+        run: |
+          helm version
+          cosign version
+          echo "chart ${{ steps.chart-version.outputs.result }}"
+
+      - name: Install helm-unittest
+        run: helm plugin install https://github.com/helm-unittest/helm-unittest.git --version v1.2.1
+
+      - name: Install kubeconform
+        run: |
+          case "$(uname -m)" in
+            x86_64) arch=amd64 ;;
+            aarch64) arch=arm64 ;;
+            *) echo "unsupported architecture $(uname -m)" >&2; exit 1 ;;
+          esac
+          curl -fsSL -o /tmp/kubeconform.tar.gz \
+            "https://github.com/yannh/kubeconform/releases/download/v0.8.0/kubeconform-linux-${arch}.tar.gz"
+          sudo tar -C /usr/local/bin -xzf /tmp/kubeconform.tar.gz kubeconform
+          kubeconform -v
+
+      - name: Lint
+        run: helm lint charts/unpoller
+
+      - name: Unit tests
+        run: helm unittest charts/unpoller
+
+      - name: Render and validate manifests
+        run: |
+          set -euo pipefail
+          schema='https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{ .Group }}/{{ .ResourceKind }}_{{ .ResourceAPIVersion }}.json'
+          validate() {
+            local name="$1"
+            shift
+            helm template "$name" charts/unpoller "$@" > "/tmp/${name}.yaml"
+            kubeconform -strict -summary \
+              -schema-location default \
+              -schema-location "$schema" \
+              "/tmp/${name}.yaml"
+          }
+          validate unpoller
+          validate unpoller-core \
+            --set podMonitor.enabled=false \
+            --set dashboards.create=false \
+            --set dashboards.grafana.create=false \
+            --set service.enabled=true \
+            --set upConfigExistingSecret.name=existing-up \
+            --set priorityClassName=system-cluster-critical \
+            --set-json 'extraEnv=[{"name":"ENABLE_SERVER_STORAGE","value":"false"}]'

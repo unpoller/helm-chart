@@ -1,4 +1,6 @@
 # Patterns to ignore when building packages.
+# Unit tests are not part of the packaged chart.
+tests/
 # This supports shell glob matching, relative path matching, and
 # negation (prefixed with !). Only one pattern per line.
 .DS_Store
