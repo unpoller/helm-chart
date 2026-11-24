@@ -19,7 +19,7 @@ jobs:
 
       - uses: azure/setup-helm@2f5e7bc67f1f9972ab16657bb795f36d8f04de0e # v5.1.0
         with:
-          version: v3.22.1
+          version: v4.3.2
 
       - name: Read the chart version
         id: chart-version
